@@ -1,171 +1,463 @@
 <!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title></title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1.0, width=device-width, initial-scale=1, shrink-to-fit=no">
+		<script   src="https://code.jquery.com/jquery-2.2.4.js"></script>
+		<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+		<script src="//d3js.org/topojson.v1.min.js"></script>
+		<!-- Bootstrap core CSS -->
+		<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+		<!-- Custom styles for this template -->
+		<link href="css/portfolio-item.css" rel="stylesheet">
+		<style>
+			/*HTML Vertical Lengend*/
+			.country-name {
+				margin: 0 !important;
+			}
 
-<head>
-	<title></title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="initial-scale=1.0">
-	<script   src="https://code.jquery.com/jquery-2.2.4.js"></script>
-	<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
-	<script src="//d3js.org/topojson.v1.min.js"></script>
-	
-</script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+			.key-dot {
+				display: inline-block;
+				height: 10px;
+				margin-right: .5em;
+				width: 10px;
+			}
 
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+			.legend {
+				margin-left:20px;
+			}
 
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<link rel="stylesheet" type="text/css" href="css/style.css">
-</head>
-<body>
-	<!-- sideNav start -->
-	<div id="mouseInf"></div>
-	<!--  -->
+			.queens { background: #1F77B4;}
+			.kings { background: #FF7F0E;}
+			.bronx { background: #2CA02C;}
+			
+			.slidecontainer {
+				width: 600px;
+			}
 
-	<svg width="1000px" height="600px"></svg>
-	<script type="text/javascript">
+			.slider {
+				-webkit-appearance: none;
+				width: 100%;
+				height: 25px;
+				background: #4CAF50;
+				outline: none;
+				opacity: 0.7;
+				-webkit-transition: .2s;
+				transition: opacity .2s;
+			}
+
+			.slider:hover {
+				opacity: 1;
+			}
+
+			.slider::-webkit-slider-thumb {
+				-webkit-appearance: none;
+				appearance: none;
+				border-radius: 5px;
+				width: 100px;
+				height: 35px;
+				background: rgb(6, 63, 8);
+				cursor: pointer;
+			}
+
+			.slider::-moz-range-thumb {
+				width: 25px;
+				height: 25px;
+				background: rgb(6, 63, 8);
+				cursor: pointer;
+			}
+					
+		</style>
 
 	</script>
-	<script type="text/javascript">
-		countyMap();
-		
-		/* 縮放、滑動 */
-		/* 
-			利用D3.js設計的Zoom Behavior，實現滑鼠滾輪滾動可地圖放大縮小效果，先宣告zoom行為，接著用call來呼叫zoom的行為。
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
-			d3.behavior.zoom(): 宣告，這裡使用了幾個參數
-			translate: 移動距離
-			scaleExtent: 縮放最大值與最小值
-			scale: 縮放大小比例
-		*/
-		var zoom = d3.behavior.zoom()
-		.translate([0, 0])
-		.scaleExtent([1, 10])
-		.scale(1)
-		.on("zoom", zoomed);
-		function zoomed() {
-			d3.select("svg").selectAll("path").attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
-			d3.select("svg").selectAll("image").attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
-		}
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
 
-		function countyMap()
-		{
-			/* 放置你的TopoJSON路徑 */
-			d3.json("map/taiwan.json", function(error, map) {
-				if (error) return console.error(error);
-				/* 
-					center: 設定地圖中心經緯度
-					scale: 設定地圖大小
-					translate: 設定地圖在svg上的中心位置
-					on: 可以設定事件觸發，可設定參數有mousedown、mouseup、click、dblclick、mouseover、mouseout、mouseenter、mouseleave
-					call(zoom): 呼叫zoom進行放大縮小滑動
-				*/
-					projection = d3.geo.mercator().center([121,23,5]).scale(8000).translate([500,400]);
-					/* 將資料轉換成城SVG Path標籤的轉換函式 */
-					path = d3.geo.path().projection(projection);
-					/* 將資料中的特徵取出，map為JSON檔的資料，後方則是在JSON中，要取出特徵的部分 */
-					features = topojson.feature(map, map.objects.County_WGS84).features;
-					/* 利用D3c.js畫出svg */
-					d3.select("svg").selectAll("path").data(features).enter().append("path").attr({
-						d: path,
-						fill: "#9EF89E",
-						class: "area"
-					}).on({
-	            	/* 
-	            		移入時，將選取到的地區(SVG PATH tag)加入css，計算滑鼠位置，將div#mouseIn座標設定到滑鼠位置
-	            		移出時，將選取到的地區移除css，將div#mouseIn隱藏
-	            	*/
-	            		"mouseover": function(d){
-	            			d3.select(this).classed("active", true);
-	            			var x = d3.mouse(this)[0];
-	            			var y = d3.mouse(this)[1];
-	            			$('#mouseInf').css({ "top": (y) + "px", "left": (x) + "px" }).show("fast");
-	            			$('#mouseInf').text(d.properties.C_Name);
-	            		},
-	            		"mouseout":  function(){
-	            			d3.select(this).classed("active", false);
-	            			$('#mouseInf').hide();
-	            		},
-	            	})
-	            	.call(zoom);
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+			<div class="container">
+				<a class="navbar-brand" href="#">大學報</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<!--div class="collapse navbar-collapse" id="navbarResponsive">
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item active">
+							<a class="nav-link" href="#">Home
+								<span class="sr-only">(current)</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#">About</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#">Services</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#">Contact</a>
+						</li>
+					</ul>
+				</div-->
+			</div>
+		</nav>
+		<!-- sideNav start -->
+		<div id="mouseInf"></div>
+		<div class="container">
 
-					/* 上色 */
-					/* 設定各縣市的數值 */
-					var dataObject = {'臺北市': 99,'新北市': 99,'臺南市': 99,'高雄市': 99,'臺中市': 99};
-					/* 將各縣市的數值(parameter)寫入features裡面，寫法範例，可自行更改 */
-					for(item=features.length - 1; item >= 0; item-- ) { 
-						var site = features[item].properties.C_Name;
-						var parameter = dataObject[site];
-						if(typeof parameter == 'undefined'){
-							features[item].properties.parameter = Math.floor((Math.random() * 100) + 1);
-						}else{
-							features[item].properties.parameter = parameter;
-						}	
-					}
-					/* 
-						domain: 設定數值最低最高的範圍
-						range: 設定最低最高的對應的顏色
-					*/
-					var color = d3.scale.linear().domain([1,100]).range(["#9EF89E","#FF3D3D"]);
-					/* 利用D3c.js畫出svg，顏色依照features裡的parameter參數 */
-					d3.select("svg").selectAll("path").data(features)
-					.attr({
-						d: path,
-						fill: function(d) {
-							return color(d.properties.parameter);
-						},
-						class: "area"
-					})
+			<!-- Portfolio Item Heading -->
+			<h2 class="my-4">台灣<span id="demo"></span>年各地國小代理教師比例分布</h2>
+			<!-- Portfolio Item Row -->
+			<div class="row">
+				<div class="col-md-8">
+					<svg id="taiwan" width="1000px" height="600px" style="float:left;"></svg>
+					<div class="slidecontainer" style="margin-left:30px;">
+						<input type="range" min="100" max="105" value="105" class="slider" id="myRange">
+					</div>
+				</div>
+		  
+				<div class="col-md-4">
+					<svg height="200" width="500">
+						<defs>
+							<linearGradient id="grad1" x1="0%" y1="100%" x2="0%" y2="0%" >
+								<stop offset="0%" style="stop-color:yellow;stop-opacity:1" />
+								<stop offset="33%" style="stop-color:orange;stop-opacity:1" />
+								<stop offset="100%" style="stop-color:red;stop-opacity:1" />
+							</linearGradient>
+						</defs>
+						<rect width="50" height="200" fill="url(#grad1)" style="margin-left:10px;"/>
+						<h5 id="minvalue" style="float:left;margin-top:-20px;margin-left:60px;">5%</h5>
+						<h5 id="maxvalue" style="margin-top:-200px;margin-left:58px;">20%</h5>
+					</svg>
+					<button onclick="money()" class="w3-button w3-green w3-round-large" style="margin-left:-50px;margin-top:560px;">105年教師薪資</button><br>
+					<button onclick="countyMap(105)" class="w3-button w3-green w3-round-large" style="margin-left:-50px;margin-top:5px;">105年代理教師比例</button>
+				</div>
+		  
+			</div>
+			<!-- /.row -->	  
+		</div>
+		<div class="row" style="margin-top:100px;">
 
-					/* 標點 */
-					/* 第一個抓不到，往上測試範例多為csv檔，所以第一欄放欄位資訊，所以不會有誤，但如果是抓資料庫，就得注意第一行的問題 */
-					var markerObject = [
-						{},
-						{title: '臺北火車站', lat: 25.0477546, lng: 121.514861, img: 'pin (6).png'},
-						{title: '台中火車站', lat: 24.1369207, lng: 120.682955, img: 'pin (1).png'},
-						{title: '高雄火車站', lat: 22.6397664, lng: 120.2999183, img: 'pin (3).png'}
-					];
-					setMarker(markerObject);
-				});
 				
-		}
-		function setMarker(data)
-		{
-			/* 
-				採用image方式，也可以選擇circle方式
-				pinWidth: 我自己設定的圖片寬度，方便調整
-				href: 設定圖片位置
-				projection: 利用projection來將經緯度轉換成svg上位置
-				on: 設定點擊後的事件
-			*/
-			var pinWidth = 30;
-			var g = d3.select("svg").append("g");
-			d3.select("svg").selectAll("g").data(data).enter().append("image")
-			.attr({
-				href: function(d) {
-					return 'img/'+d.img
-				},
-				x: function(d) {
-					return projection([d.lng, d.lat])[0]-(pinWidth/2);
-				},
-				y: function(d) {
-					return projection([d.lng, d.lat])[1]-pinWidth
-				},
-				height: pinWidth,
-				width: pinWidth,
-				class: function(d) {
-					return d.title
-				}
-			})
-			.on({
-				"click": function(d){alert(d.title);}
-			});
-		}
 		
-	</script>
+		</div>
+		<!-- Footer -->
+		<footer class="py-5 bg-dark">
+			<div class="container">
+				<p class="m-0 text-center text-white">Copyright &copy; Your Website 2018</p>
+			</div>
+			<!-- /.container -->
+		</footer>
+		<!--  -->
+		<!--h2>台灣<span id="demo"></span>年各地國小代理教師比例分布</h2>
+		<svg id="taiwan" width="1000px" height="600px" style="float:left;"></svg>
+		<svg height="200" width="500">
+			<defs>
+			<linearGradient id="grad1" x1="0%" y1="100%" x2="0%" y2="0%">
+				<stop offset="0%" style="stop-color:yellow;stop-opacity:1" />
+				<stop offset="33%" style="stop-color:orange;stop-opacity:1" />
+				<stop offset="100%" style="stop-color:red;stop-opacity:1" />
+			</linearGradient>
+			</defs>
+			<rect width="50" height="200" fill="url(#grad1)" style="margin-left:10px;"/>
+			<h5 style="float:left;margin-top:0px;">40%</h5>
+			<h5 style="margin-top:-20px;">20%</h5>
+		</svg>
+		<div class="slidecontainer" style="margin-left:30px;">
+			<input type="range" min="100" max="105" value="105" class="slider" id="myRange">
+		</div-->
+		<!--div class="legend1" style="margin-left:5px;float:left;">
+			<div class="legend1"> <p class="country-name"><span class="key-dot queens"></span>大於1500人</p> </div>
+			<div class="legend1"> <p class="country-name"><span class="key-dot kings"></span>1000 ~ 500人</p> </div>
+			<div class="legend1"> <p class="country-name"><span class="key-dot bronx"></span>小於500人</p> </div>
+		</div-->
+		
+		<script type="text/javascript">
+			var slider = document.getElementById("myRange");
+			var output = document.getElementById("demo");
+			var taiwan_img = document.getElementById("taiwan");
+			var maxvalue = document.getElementById("maxvalue");
+			var minvalue = document.getElementById("minvalue");
 
-</body>
+			output.innerHTML = slider.value;
+
+			slider.oninput = function() {
+				output.innerHTML = this.value;
+				changemap(this.value);
+			}
+		</script>
+		<script type="text/javascript">
+			countyMap(105);
+			
+			/* 縮放、滑動 */
+			/* 
+				利用D3.js設計的Zoom Behavior，實現滑鼠滾輪滾動可地圖放大縮小效果，先宣告zoom行為，接著用call來呼叫zoom的行為。
+
+				d3.behavior.zoom(): 宣告，這裡使用了幾個參數
+				translate: 移動距離
+				scaleExtent: 縮放最大值與最小值
+				scale: 縮放大小比例
+			*/
+			var zoom = d3.behavior.zoom()
+			.translate([0, 0])
+			.scaleExtent([1, 10])
+			.scale(1)
+			.on("zoom", zoomed);
+			function zoomed() {
+				d3.select("svg").selectAll("path").attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
+				d3.select("svg").selectAll("image").attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
+			}
+
+			function countyMap(year)
+			{
+				maxvalue.innerHTML = "20%";
+				minvalue.innerHTML = "5%";
+				slider.style.display = "block";
+				/* 放置你的TopoJSON路徑 */
+				d3.json("map/taiwan.json", function(error, map) {
+					if (error) return console.error(error);
+					/* 
+						center: 設定地圖中心經緯度
+						scale: 設定地圖大小
+						translate: 設定地圖在svg上的中心位置
+						on: 可以設定事件觸發，可設定參數有mousedown、mouseup、click、dblclick、mouseover、mouseout、mouseenter、mouseleave
+						call(zoom): 呼叫zoom進行放大縮小滑動
+					*/
+						projection = d3.geo.mercator().center([121,23.5]).scale(6000).translate([400,350]);
+						/* 將資料轉換成城SVG Path標籤的轉換函式 */
+						path = d3.geo.path().projection(projection);
+						/* 將資料中的特徵取出，map為JSON檔的資料，後方則是在JSON中，要取出特徵的部分 */
+						features = topojson.feature(map, map.objects.County_WGS84).features;
+						/* 利用D3c.js畫出svg */
+						d3.select("svg").selectAll("path").data(features).enter().append("path").attr({
+							d: path,
+							fill: "#9EF89E",
+							class: "area"
+						}).on({
+						/* 
+							移入時，將選取到的地區(SVG PATH tag)加入css，計算滑鼠位置，將div#mouseIn座標設定到滑鼠位置
+							移出時，將選取到的地區移除css，將div#mouseIn隱藏
+						*/
+							"mouseover": function(d){
+								d3.select(this).classed("active", true);
+								var x = d3.mouse(this)[0];
+								var y = d3.mouse(this)[1];
+								$('#mouseInf').css({ "top": 300 + "px", "left": 500 + "px" }).show("fast");
+								$('#mouseInf').text(d.properties.C_Name);
+							},
+							"mouseout":  function(){
+								d3.select(this).classed("active", false);
+								$('#mouseInf').hide();
+							},
+						})
+						.call(zoom);
+
+						/* 上色 */
+
+						d3.csv("taiwan_proportion.csv", function(data) {
+						
+							/* 將各縣市的數值(parameter)寫入features裡面，寫法範例，可自行更改 */
+							for(item=features.length - 1; item >= 0; item-- ) { 
+								var site = features[item].properties.County_ID;
+								var parameter = data[year-100][site];
+								if(typeof parameter == 'undefined'){
+									features[item].properties.parameter = Math.floor((Math.random() * 100) + 1);
+								}else{
+									features[item].properties.parameter = parameter;
+									//console.log(site);
+								}	
+							}
+							/* 
+								domain: 設定數值最低最高的範圍
+								range: 設定最低最高的對應的顏色
+							*/
+							var color = d3.scale.linear().domain([5,10,20]).range(["Yellow","orange","red"]);
+							//var color = ['#1F77B4','#FF7F0E','#2CA02C'];
+							/* 利用D3c.js畫出svg，顏色依照features裡的parameter參數 */
+							d3.select("svg").selectAll("path").data(features)
+							.attr({
+								d: path,
+								fill: function(d) {
+									//if(d.properties.parameter > 1500){return color[0];}
+									//else if(d.properties.parameter > 1000){return color[1];}
+									//else{return color[2];}
+									return color(d.properties.parameter);
+								},
+								class: "area"
+							})
+								
+							/* 標點 */
+							/* 第一個抓不到，往上測試範例多為csv檔，所以第一欄放欄位資訊，所以不會有誤，但如果是抓資料庫，就得注意第一行的問題 */
+							/*var markerObject = [
+								{},
+								{title: '臺北火車站', lat: 25.0477546, lng: 121.514861, img: 'pin (6).png'},
+								{title: '台中火車站', lat: 24.1369207, lng: 120.682955, img: 'pin (1).png'},
+								{title: '高雄火車站', lat: 22.6397664, lng: 120.2999183, img: 'pin (3).png'}
+							];
+							setMarker(markerObject);*/
+						});
+					});
+					
+			}
+
+			function changemap(year){
+				d3.csv("taiwan_proportion.csv", function(data) {
+						
+						/* 將各縣市的數值(parameter)寫入features裡面，寫法範例，可自行更改 */
+						for(item=features.length - 1; item >= 0; item-- ) { 
+							var site = features[item].properties.County_ID;
+							var parameter = data[year-100][site];
+							if(typeof parameter == 'undefined'){
+								features[item].properties.parameter = Math.floor((Math.random() * 100) + 1);
+							}else{
+								features[item].properties.parameter = parameter;
+								//console.log(site);
+							}	
+						}
+						/* 
+							domain: 設定數值最低最高的範圍
+							range: 設定最低最高的對應的顏色
+						*/
+						var color = d3.scale.linear().domain([5,10,20]).range(["Yellow","orange","red"]);
+						//var color = ['#1F77B4','#FF7F0E','#2CA02C'];
+						/* 利用D3c.js畫出svg，顏色依照features裡的parameter參數 */
+						d3.select("svg").selectAll("path").data(features)
+						.attr({
+							d: path,
+							fill: function(d) {
+								//if(d.properties.parameter > 1500){return color[0];}
+								//else if(d.properties.parameter > 1000){return color[1];}
+								//else{return color[2];}
+								return color(d.properties.parameter);
+							},
+							class: "area"
+						})
+
+					});
+			}
+
+			function money()
+			{
+				maxvalue.innerHTML = "11個月";
+				minvalue.innerHTML = "10個月";
+				slider.style.display = "none";
+
+				/* 放置你的TopoJSON路徑 */
+				d3.json("map/taiwan.json", function(error, map) {
+					if (error) return console.error(error);
+
+						projection = d3.geo.mercator().center([121,23.5]).scale(6000).translate([400,350]);
+						/* 將資料轉換成城SVG Path標籤的轉換函式 */
+						path = d3.geo.path().projection(projection);
+						/* 將資料中的特徵取出，map為JSON檔的資料，後方則是在JSON中，要取出特徵的部分 */
+						features = topojson.feature(map, map.objects.County_WGS84).features;
+						/* 利用D3c.js畫出svg */
+						d3.select("svg").selectAll("path").data(features).enter().append("path").attr({
+							d: path,
+							fill: "#9EF89E",
+							class: "area"
+						}).on({
+						/* 
+							移入時，將選取到的地區(SVG PATH tag)加入css，計算滑鼠位置，將div#mouseIn座標設定到滑鼠位置
+							移出時，將選取到的地區移除css，將div#mouseIn隱藏
+						*/
+							"mouseover": function(d){
+								d3.select(this).classed("active", true);
+								var x = d3.mouse(this)[0];
+								var y = d3.mouse(this)[1];
+								$('#mouseInf').css({ "top": 300 + "px", "left": 500 + "px" }).show("fast");
+								$('#mouseInf').text(d.properties.C_Name);
+							},
+							"mouseout":  function(){
+								d3.select(this).classed("active", false);
+								$('#mouseInf').hide();
+							},
+						})
+						.call(zoom);
+
+						/* 上色 */
+
+						d3.csv("salary.csv", function(data) {
+						
+							/* 將各縣市的數值(parameter)寫入features裡面，寫法範例，可自行更改 */
+							for(item=features.length - 1; item >= 0; item-- ) { 
+								var site = features[item].properties.County_ID;
+								var parameter = data[0][site];
+								console.log(parameter);
+								if(typeof parameter == 'undefined'){
+									features[item].properties.parameter = Math.floor((Math.random() * 100) + 1);
+								}else{
+									features[item].properties.parameter = parameter;
+								}	
+							}
+							/* 
+								domain: 設定數值最低最高的範圍
+								range: 設定最低最高的對應的顏色
+							*/
+							var color = d3.scale.linear().domain([300,331]).range(["Yellow","red"]);
+							//var color = ['#1F77B4','#FF7F0E','#2CA02C'];
+							/* 利用D3c.js畫出svg，顏色依照features裡的parameter參數 */
+							d3.select("svg").selectAll("path").data(features)
+							.attr({
+								d: path,
+								fill: function(d) {
+									//if(d.properties.parameter > 1500){return color[0];}
+									//else if(d.properties.parameter > 1000){return color[1];}
+									//else{return color[2];}
+									return color(d.properties.parameter);
+								},
+								class: "area"
+							})
+
+							
+						});
+					});
+					
+			}
+			
+			function setMarker(data)
+			{
+				/* 
+					採用image方式，也可以選擇circle方式
+					pinWidth: 我自己設定的圖片寬度，方便調整
+					href: 設定圖片位置
+					projection: 利用projection來將經緯度轉換成svg上位置
+					on: 設定點擊後的事件
+				*/
+				var pinWidth = 30;
+				var g = d3.select("svg").append("g");
+				d3.select("svg").selectAll("g").data(data).enter().append("image")
+				.attr({
+					href: function(d) {
+						return 'img/'+d.img
+					},
+					x: function(d) {
+						return projection([d.lng, d.lat])[0]-(pinWidth/2);
+					},
+					y: function(d) {
+						return projection([d.lng, d.lat])[1]-pinWidth
+					},
+					height: pinWidth,
+					width: pinWidth,
+					class: function(d) {
+						return d.title
+					}
+				})
+				.on({
+					"click": function(d){alert(d.title);}
+				});
+			}
+			
+		</script>
+		
+	</body>
 </html>
 
 
