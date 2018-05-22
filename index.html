@@ -129,7 +129,7 @@
 		<div class="container">
 
 			<!-- Portfolio Item Heading -->
-			<h2 id="tilte1" class="my-4" style="display:block;">台灣<span id="demo"></span>年各縣市代理教師比例分布圖</h2>
+			<h2 id="title1" class="my-4" style="display:block;">台灣<span id="demo"></span>年各縣市代理教師比例分布圖</h2>
 			<h2 id="title2" style="display:none;">台灣105年各縣市代理教師薪資分布圖</h2>
 			<!-- Portfolio Item Row -->
 			<div class="row">
@@ -337,7 +337,6 @@
 				salary_table.style.display = "none";
 				title1.style.display = "block";
 				title2.style.display = "none";
-				output.style.display = "block";
 
 				d3.csv("taiwan_proportion.csv", function(data) {
 						
@@ -389,7 +388,6 @@
 				salary_table.style.display = "block";
 				title1.style.display = "none";
 				title2.style.display = "block";
-				output.style.display = "none";
 
 				/* 放置你的TopoJSON路徑 */
 				d3.json("map/taiwan.json", function(error, map) {
