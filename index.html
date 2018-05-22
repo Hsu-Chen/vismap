@@ -129,8 +129,8 @@
 		<div class="container">
 
 			<!-- Portfolio Item Heading -->
-			<h2 id="title1" class="my-4" style="display:block;">台灣<span id="demo"></span>年各縣市代理教師比例分布圖</h2>
-			<h2 id="title2" style="display:none;">台灣105年各縣市代理教師薪資分布圖</h2>
+			<h2 id="title1" class="my-4" style="display:block;font-weight:bold;">台灣<span id="demo"></span>年各縣市代理教師比例分布圖</h2>
+			<h2 id="title2" style="display:none;font-weight:bold;">台灣105年各縣市代理教師薪資分布圖</h2>
 			<!-- Portfolio Item Row -->
 			<div class="row">
 				<div class="col-md-7">
@@ -142,11 +142,12 @@
 					</div>
 				</div>
 		  
-				<div class="col-md-5" style="margin-top:3%;">
+				<div class="col-md-5" style="margin-top:20%;">
+					<div>
 					<!--教師比例表格-->
-					<table id="proportion" style="float:left;border:2px #009933 solid;display:block;" >
+					<table id="proportion" style="float:left;border:0px #009933 solid;display:block;" >
 						<tr>
-							<td colspan="2">百分比(%)</td>
+							<td colspan="2" style="font-weight:bold;">百分比(%)</td>
 						</tr>
 						<tr>
 							<td><span class="dot" style="background-color:#e6e600;"></span></td>
@@ -166,9 +167,9 @@
 						</tr>
 					</table>
 					<!--教室薪資表格-->
-					<table id="salary" style="float:left;border:2px #009933 solid;display:none;" >
+					<table id="salary" style="float:left;border:0px #009933 solid;display:none;" >
 						<tr>
-							<td colspan="2">10個月又幾天</td>
+							<td colspan="2" style="font-weight:bold;">10個月又幾天</td>
 						</tr>
 						<tr>
 							<td><span class="dot" style="background-color:#80ffaa;"></span></td>
@@ -182,7 +183,13 @@
 							<td><span class="dot" style="background-color:#009933;"></span></td>
 							<td> &#62 15天 </td>
 						</tr>
-					</table>	
+					</table>
+					</div>
+					<div style="margin-top:50%;">
+						<h4 style="font-weight:bold;">資料來源：</h4><br>
+						<h4 style="font-weight:bold;">薪資 ： 《中小學兼任代課及代理教師聘任辦法》、各縣市相關之中小學兼任代課及代理教師聘任補充規定</h4><br>
+						<h4 style="font-weight:bold;">代理教師比例  ： 中華民國教育統計</h4>	
+					</div>
 				</div>
 		  
 			</div>
@@ -253,7 +260,7 @@
 						on: 可以設定事件觸發，可設定參數有mousedown、mouseup、click、dblclick、mouseover、mouseout、mouseenter、mouseleave
 						call(zoom): 呼叫zoom進行放大縮小滑動
 					*/
-						projection = d3.geo.mercator().center([121,23.5]).scale(6000).translate([400,350]);
+						projection = d3.geo.mercator().center([121,23.5]).scale(6000).translate([330,320]);
 						/* 將資料轉換成城SVG Path標籤的轉換函式 */
 						path = d3.geo.path().projection(projection);
 						/* 將資料中的特徵取出，map為JSON檔的資料，後方則是在JSON中，要取出特徵的部分 */
@@ -263,25 +270,8 @@
 							d: path,
 							fill: "#9EF89E",
 							class: "area"
-						}).on({
-						/* 
-							移入時，將選取到的地區(SVG PATH tag)加入css，計算滑鼠位置，將div#mouseIn座標設定到滑鼠位置
-							移出時，將選取到的地區移除css，將div#mouseIn隱藏
-						*/
-							"mouseover": function(d){
-								d3.select(this).classed("active", true);
-								var x = d3.mouse(this)[0];
-								var y = d3.mouse(this)[1];
-								$('#mouseInf').css({ "top": (y+150) + "px", "left": (x+200) + "px" }).css("z-index","1").show("fast");
-								$('#mouseInf').text(d.properties.C_Name);
-							},
-							"mouseout":  function(){
-								d3.select(this).classed("active", false);
-								$('#mouseInf').hide();
-							},
-						})
-						.call(zoom);
-
+						}).call(zoom);
+						//d3.select("svg").append('rect').attr('width', 100).attr('height', 100).attr('fill','none').attr('stroke','black').attr('x',200);
 						/* 上色 */
 
 						d3.csv("taiwan_proportion.csv", function(data) {
@@ -315,17 +305,23 @@
 									//return color(d.properties.parameter);
 								},
 								class: "area"
+							}).on({
+							/* 
+								移入時，將選取到的地區(SVG PATH tag)加入css，計算滑鼠位置，將div#mouseIn座標設定到滑鼠位置
+								移出時，將選取到的地區移除css，將div#mouseIn隱藏
+							*/
+								"mouseover": function(d){
+									d3.select(this).classed("active", true);
+									var x = d3.mouse(this)[0];
+									var y = d3.mouse(this)[1];
+									$('#mouseInf').css({ "top": event.clientY + "px", "left": event.clientX + "px" }).css("z-index","1").show("fast");
+									$('#mouseInf').text(d.properties.C_Name+"\n"+d.properties.parameter+"%");
+								},
+								"mouseout":  function(){
+									d3.select(this).classed("active", false);
+									$('#mouseInf').hide();
+								},
 							})
-								
-							/* 標點 */
-							/* 第一個抓不到，往上測試範例多為csv檔，所以第一欄放欄位資訊，所以不會有誤，但如果是抓資料庫，就得注意第一行的問題 */
-							/*var markerObject = [
-								{},
-								{title: '臺北火車站', lat: 25.0477546, lng: 121.514861, img: 'pin (6).png'},
-								{title: '台中火車站', lat: 24.1369207, lng: 120.682955, img: 'pin (1).png'},
-								{title: '高雄火車站', lat: 22.6397664, lng: 120.2999183, img: 'pin (3).png'}
-							];
-							setMarker(markerObject);*/
 						});
 					});
 					
@@ -369,8 +365,8 @@
 								d3.select(this).classed("active", true);
 								var x = d3.mouse(this)[0];
 								var y = d3.mouse(this)[1];
-								$('#mouseInf').css({ "top": (y+150) + "px", "left": (x+200) + "px" }).css("z-index","1").show("fast");
-								$('#mouseInf').text(d.properties.C_Name);
+								$('#mouseInf').css({ "top": event.clientY + "px", "left": event.clientX + "px" }).css("z-index","1").show("fast");
+								$('#mouseInf').text(d.properties.C_Name+"\n"+d.properties.parameter+"%");
 							},
 							"mouseout":  function(){
 								d3.select(this).classed("active", false);
@@ -393,7 +389,7 @@
 				d3.json("map/taiwan.json", function(error, map) {
 					if (error) return console.error(error);
 
-						projection = d3.geo.mercator().center([121,23.5]).scale(6000).translate([400,350]);
+						projection = d3.geo.mercator().center([121,23.5]).scale(6000).translate([330,320]);
 						/* 將資料轉換成城SVG Path標籤的轉換函式 */
 						path = d3.geo.path().projection(projection);
 						/* 將資料中的特徵取出，map為JSON檔的資料，後方則是在JSON中，要取出特徵的部分 */
@@ -403,24 +399,7 @@
 							d: path,
 							fill: "#9EF89E",
 							class: "area"
-						}).on({
-						/* 
-							移入時，將選取到的地區(SVG PATH tag)加入css，計算滑鼠位置，將div#mouseIn座標設定到滑鼠位置
-							移出時，將選取到的地區移除css，將div#mouseIn隱藏
-						*/
-							"mouseover": function(d){
-								d3.select(this).classed("active", true);
-								var x = d3.mouse(this)[0];
-								var y = d3.mouse(this)[1];
-								$('#mouseInf').css({ "top": (y+150) + "px", "left": (x+200) + "px" }).css("z-index","1").show("fast");
-								$('#mouseInf').text(d.properties.C_Name);
-							},
-							"mouseout":  function(){
-								d3.select(this).classed("active", false);
-								$('#mouseInf').hide();
-							},
-						})
-						.call(zoom);
+						}).call(zoom);
 
 						/* 上色 */
 
@@ -462,8 +441,8 @@
 									d3.select(this).classed("active", true);
 									var x = d3.mouse(this)[0];
 									var y = d3.mouse(this)[1];
-									$('#mouseInf').css({ "top": (y+150) + "px", "left": (x+200) + "px" }).css("z-index","1").show("fast");
-									$('#mouseInf').text(Math.floor(d.properties.parameter/30)+"個月又"+(d.properties.parameter%30)+"天");
+									$('#mouseInf').css({ "top": event.clientY + "px", "left": event.clientX + "px" }).css("z-index","1").show("fast");
+									$('#mouseInf').text(d.properties.C_Name+"\n"+Math.floor(d.properties.parameter/30)+"個月又"+(d.properties.parameter%30)+"天");
 								},
 								"mouseout":  function(){
 									d3.select(this).classed("active", false);
