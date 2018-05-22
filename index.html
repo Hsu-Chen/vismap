@@ -68,7 +68,23 @@
 				background: rgb(6, 63, 8);
 				cursor: pointer;
 			}
-					
+			.table {
+				border-collapse: collapse;
+			}
+
+			.table, td, th {
+				width:50px;
+				height: 25px;
+    			border: 0px solid black;
+			}
+			.dot {
+				height: 25px;
+				width: 25px;
+				background-color: #bbb;
+				border-radius: 50%;
+				display: inline-block;
+				padding:5px;
+			}
 		</style>
 
 	</script>
@@ -113,31 +129,60 @@
 		<div class="container">
 
 			<!-- Portfolio Item Heading -->
-			<h2 class="my-4">台灣<span id="demo"></span>年各地國小代理教師比例分布</h2>
+			<h2 id="tilte1" class="my-4" style="display:block;">台灣<span id="demo"></span>年各縣市代理教師比例分布圖</h2>
+			<h2 id="title2" style="display:none;">台灣105年各縣市代理教師薪資分布圖</h2>
 			<!-- Portfolio Item Row -->
 			<div class="row">
-				<div class="col-md-8">
-					<svg id="taiwan" width="1000px" height="600px" style="float:left;"></svg>
-					<div class="slidecontainer" style="margin-left:30px;">
+				<div class="col-md-7">
+					<button onclick="money()" class="w3-button w3-green w3-round-large" >105年教師薪資</button>
+					<button onclick="changemap(105)" class="w3-button w3-green w3-round-large" >105年代理教師比例</button>
+					<svg id="taiwan" width="600px" height="600px" style="float:left;border:2px #009933 solid;"></svg>
+					<div class="slidecontainer" style="margin-top:100%;">
 						<input type="range" min="100" max="105" value="105" class="slider" id="myRange">
 					</div>
 				</div>
 		  
-				<div class="col-md-4">
-					<svg height="200" width="500">
-						<defs>
-							<linearGradient id="grad1" x1="0%" y1="100%" x2="0%" y2="0%" >
-								<stop offset="0%" style="stop-color:yellow;stop-opacity:1" />
-								<stop offset="33%" style="stop-color:orange;stop-opacity:1" />
-								<stop offset="100%" style="stop-color:red;stop-opacity:1" />
-							</linearGradient>
-						</defs>
-						<rect width="50" height="200" fill="url(#grad1)" style="margin-left:10px;"/>
-						<h5 id="minvalue" style="float:left;margin-top:-20px;margin-left:60px;">5%</h5>
-						<h5 id="maxvalue" style="margin-top:-200px;margin-left:58px;">20%</h5>
-					</svg>
-					<button onclick="money()" class="w3-button w3-green w3-round-large" style="margin-left:-50px;margin-top:560px;">105年教師薪資</button><br>
-					<button onclick="countyMap(105)" class="w3-button w3-green w3-round-large" style="margin-left:-50px;margin-top:5px;">105年代理教師比例</button>
+				<div class="col-md-5" style="margin-top:3%;">
+					<!--教師比例表格-->
+					<table id="proportion" style="float:left;border:2px #009933 solid;display:block;" >
+						<tr>
+							<td colspan="2">百分比(%)</td>
+						</tr>
+						<tr>
+							<td><span class="dot" style="background-color:#e6e600;"></span></td>
+							<td> &#60 10 </td>
+						</tr>
+						<tr>
+							<td><span class="dot" style="background-color:#ff751a;"></span></td>
+							<td> 10 ~ 12 </td>
+						</tr>
+						<tr>
+							<td><span class="dot" style="background-color:red;"></span></td>
+							<td> 12 ~ 14 </td>
+						</tr>
+						<tr>
+							<td><span class="dot" style="background-color:maroon;"></span></td>
+							<td> &#62 14 </td>
+						</tr>
+					</table>
+					<!--教室薪資表格-->
+					<table id="salary" style="float:left;border:2px #009933 solid;display:none;" >
+						<tr>
+							<td colspan="2">10個月又幾天</td>
+						</tr>
+						<tr>
+							<td><span class="dot" style="background-color:#80ffaa;"></span></td>
+							<td width="100px"> &#60 7天 </td>
+						</tr>
+						<tr>
+							<td><span class="dot" style="background-color:#00cc00;"></span></td>
+							<td> 7~15天 </td>
+						</tr>
+						<tr>
+							<td><span class="dot" style="background-color:#009933;"></span></td>
+							<td> &#62 15天 </td>
+						</tr>
+					</table>	
 				</div>
 		  
 			</div>
@@ -155,36 +200,16 @@
 			</div>
 			<!-- /.container -->
 		</footer>
-		<!--  -->
-		<!--h2>台灣<span id="demo"></span>年各地國小代理教師比例分布</h2>
-		<svg id="taiwan" width="1000px" height="600px" style="float:left;"></svg>
-		<svg height="200" width="500">
-			<defs>
-			<linearGradient id="grad1" x1="0%" y1="100%" x2="0%" y2="0%">
-				<stop offset="0%" style="stop-color:yellow;stop-opacity:1" />
-				<stop offset="33%" style="stop-color:orange;stop-opacity:1" />
-				<stop offset="100%" style="stop-color:red;stop-opacity:1" />
-			</linearGradient>
-			</defs>
-			<rect width="50" height="200" fill="url(#grad1)" style="margin-left:10px;"/>
-			<h5 style="float:left;margin-top:0px;">40%</h5>
-			<h5 style="margin-top:-20px;">20%</h5>
-		</svg>
-		<div class="slidecontainer" style="margin-left:30px;">
-			<input type="range" min="100" max="105" value="105" class="slider" id="myRange">
-		</div-->
-		<!--div class="legend1" style="margin-left:5px;float:left;">
-			<div class="legend1"> <p class="country-name"><span class="key-dot queens"></span>大於1500人</p> </div>
-			<div class="legend1"> <p class="country-name"><span class="key-dot kings"></span>1000 ~ 500人</p> </div>
-			<div class="legend1"> <p class="country-name"><span class="key-dot bronx"></span>小於500人</p> </div>
-		</div-->
+		
 		
 		<script type="text/javascript">
 			var slider = document.getElementById("myRange");
 			var output = document.getElementById("demo");
 			var taiwan_img = document.getElementById("taiwan");
-			var maxvalue = document.getElementById("maxvalue");
-			var minvalue = document.getElementById("minvalue");
+			var proportion_table = document.getElementById("proportion");
+			var salary_table = document.getElementById("salary");
+			var title1 = document.getElementById("title1");
+			var title2 = document.getElementById("title2");
 
 			output.innerHTML = slider.value;
 
@@ -217,8 +242,6 @@
 
 			function countyMap(year)
 			{
-				maxvalue.innerHTML = "20%";
-				minvalue.innerHTML = "5%";
 				slider.style.display = "block";
 				/* 放置你的TopoJSON路徑 */
 				d3.json("map/taiwan.json", function(error, map) {
@@ -249,7 +272,7 @@
 								d3.select(this).classed("active", true);
 								var x = d3.mouse(this)[0];
 								var y = d3.mouse(this)[1];
-								$('#mouseInf').css({ "top": 300 + "px", "left": 500 + "px" }).show("fast");
+								$('#mouseInf').css({ "top": (y+150) + "px", "left": (x+200) + "px" }).css("z-index","1").show("fast");
 								$('#mouseInf').text(d.properties.C_Name);
 							},
 							"mouseout":  function(){
@@ -278,17 +301,18 @@
 								domain: 設定數值最低最高的範圍
 								range: 設定最低最高的對應的顏色
 							*/
-							var color = d3.scale.linear().domain([5,10,20]).range(["Yellow","orange","red"]);
-							//var color = ['#1F77B4','#FF7F0E','#2CA02C'];
+							//var color = d3.scale.linear().domain([5,10,15]).range(["Yellow","orange","#ff1a1a"]);
+							var color = ["#e6e600","#ff751a","red","Maroon"];
 							/* 利用D3c.js畫出svg，顏色依照features裡的parameter參數 */
 							d3.select("svg").selectAll("path").data(features)
 							.attr({
 								d: path,
 								fill: function(d) {
-									//if(d.properties.parameter > 1500){return color[0];}
-									//else if(d.properties.parameter > 1000){return color[1];}
-									//else{return color[2];}
-									return color(d.properties.parameter);
+									if(d.properties.parameter < 10){return color[0];}
+									else if(d.properties.parameter < 12){return color[1];}
+									else if(d.properties.parameter < 14){return color[2];}
+									else{return color[3];}
+									//return color(d.properties.parameter);
 								},
 								class: "area"
 							})
@@ -308,6 +332,13 @@
 			}
 
 			function changemap(year){
+				slider.style.display = "block";
+				proportion_table.style.display = "block";
+				salary_table.style.display = "none";
+				title1.style.display = "block";
+				title2.style.display = "none";
+				output.style.display = "block";
+
 				d3.csv("taiwan_proportion.csv", function(data) {
 						
 						/* 將各縣市的數值(parameter)寫入features裡面，寫法範例，可自行更改 */
@@ -321,23 +352,31 @@
 								//console.log(site);
 							}	
 						}
-						/* 
-							domain: 設定數值最低最高的範圍
-							range: 設定最低最高的對應的顏色
-						*/
-						var color = d3.scale.linear().domain([5,10,20]).range(["Yellow","orange","red"]);
-						//var color = ['#1F77B4','#FF7F0E','#2CA02C'];
+						
+						var color = ["#e6e600","#ff751a","red","Maroon"];
 						/* 利用D3c.js畫出svg，顏色依照features裡的parameter參數 */
 						d3.select("svg").selectAll("path").data(features)
 						.attr({
 							d: path,
 							fill: function(d) {
-								//if(d.properties.parameter > 1500){return color[0];}
-								//else if(d.properties.parameter > 1000){return color[1];}
-								//else{return color[2];}
-								return color(d.properties.parameter);
+								if(d.properties.parameter < 10){return color[0];}
+								else if(d.properties.parameter < 12){return color[1];}
+								else if(d.properties.parameter < 14){return color[2];}
+								else{return color[3];}
 							},
 							class: "area"
+						}).on({
+							"mouseover": function(d){
+								d3.select(this).classed("active", true);
+								var x = d3.mouse(this)[0];
+								var y = d3.mouse(this)[1];
+								$('#mouseInf').css({ "top": (y+150) + "px", "left": (x+200) + "px" }).css("z-index","1").show("fast");
+								$('#mouseInf').text(d.properties.C_Name);
+							},
+							"mouseout":  function(){
+								d3.select(this).classed("active", false);
+								$('#mouseInf').hide();
+							},
 						})
 
 					});
@@ -345,9 +384,12 @@
 
 			function money()
 			{
-				maxvalue.innerHTML = "11個月";
-				minvalue.innerHTML = "10個月";
 				slider.style.display = "none";
+				proportion_table.style.display = "none";
+				salary_table.style.display = "block";
+				title1.style.display = "none";
+				title2.style.display = "block";
+				output.style.display = "none";
 
 				/* 放置你的TopoJSON路徑 */
 				d3.json("map/taiwan.json", function(error, map) {
@@ -372,7 +414,7 @@
 								d3.select(this).classed("active", true);
 								var x = d3.mouse(this)[0];
 								var y = d3.mouse(this)[1];
-								$('#mouseInf').css({ "top": 300 + "px", "left": 500 + "px" }).show("fast");
+								$('#mouseInf').css({ "top": (y+150) + "px", "left": (x+200) + "px" }).css("z-index","1").show("fast");
 								$('#mouseInf').text(d.properties.C_Name);
 							},
 							"mouseout":  function(){
@@ -390,7 +432,6 @@
 							for(item=features.length - 1; item >= 0; item-- ) { 
 								var site = features[item].properties.County_ID;
 								var parameter = data[0][site];
-								console.log(parameter);
 								if(typeof parameter == 'undefined'){
 									features[item].properties.parameter = Math.floor((Math.random() * 100) + 1);
 								}else{
@@ -401,22 +442,37 @@
 								domain: 設定數值最低最高的範圍
 								range: 設定最低最高的對應的顏色
 							*/
-							var color = d3.scale.linear().domain([300,331]).range(["Yellow","red"]);
-							//var color = ['#1F77B4','#FF7F0E','#2CA02C'];
+							//var color = d3.scale.linear().domain([300,331]).range(["Yellow","red"]);
+							var colormap = ['#80ffaa','#00cc00','#009933'];
 							/* 利用D3c.js畫出svg，顏色依照features裡的parameter參數 */
 							d3.select("svg").selectAll("path").data(features)
 							.attr({
 								d: path,
 								fill: function(d) {
-									//if(d.properties.parameter > 1500){return color[0];}
-									//else if(d.properties.parameter > 1000){return color[1];}
-									//else{return color[2];}
-									return color(d.properties.parameter);
+									if(d.properties.parameter < 307){return colormap[0];}
+									else if(d.properties.parameter < 315){return colormap[1];}
+									else{return colormap[2];}
+									//return color(d.properties.parameter);
 								},
 								class: "area"
+							}).on({
+							/* 
+								移入時，將選取到的地區(SVG PATH tag)加入css，計算滑鼠位置，將div#mouseIn座標設定到滑鼠位置
+								移出時，將選取到的地區移除css，將div#mouseIn隱藏
+							*/
+								"mouseover": function(d){
+									d3.select(this).classed("active", true);
+									var x = d3.mouse(this)[0];
+									var y = d3.mouse(this)[1];
+									$('#mouseInf').css({ "top": (y+150) + "px", "left": (x+200) + "px" }).css("z-index","1").show("fast");
+									$('#mouseInf').text(Math.floor(d.properties.parameter/30)+"個月又"+(d.properties.parameter%30)+"天");
+								},
+								"mouseout":  function(){
+									d3.select(this).classed("active", false);
+									$('#mouseInf').hide();
+								},
 							})
 
-							
 						});
 					});
 					
