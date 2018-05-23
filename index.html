@@ -134,11 +134,16 @@
 			<!-- Portfolio Item Row -->
 			<div class="row">
 				<div class="col-md-7">
-					<button onclick="money()" class="w3-button w3-green w3-round-large" >105年教師薪資</button>
-					<button onclick="changemap(105)" class="w3-button w3-green w3-round-large" >105年代理教師比例</button>
-					<svg id="taiwan" width="600px" height="600px" style="float:left;border:2px #009933 solid;"></svg>
+					<button onclick="money()" class="w3-button w3-round-large" style="background-color: #074c6d;color: white;">105年教師薪資</button>
+					<button onclick="changemap(100)" class="w3-button w3-round-large" style="background-color: #074c6d;color:white;">105年代理教師比例</button>
+					<svg id="taiwan" width="600px" height="600px" style="float:left;border:2px #074c6d solid;"></svg>
 					<div class="slidecontainer" style="margin-top:100%;">
-						<input type="range" min="100" max="105" value="105" class="slider" id="myRange">
+						<input type="range" min="100" max="105" value="100" class="slider" id="myRange">
+					</div>
+					<div style="margin-top:5%;">
+						<h5 style="font-weight:bold;">資料來源：</h5>
+						<h5 style="font-weight:bold;">教師薪資 ： 《中小學兼任代課及代理教師聘任辦法》、各縣市相關之中小學兼任代課及代理教師聘任補充規定</h5>
+						<h5 style="font-weight:bold;">代理教師比例  ： 中華民國教育統計</h5>	
 					</div>
 				</div>
 		  
@@ -150,19 +155,23 @@
 							<td colspan="2" style="font-weight:bold;">百分比(%)</td>
 						</tr>
 						<tr>
-							<td><span class="dot" style="background-color:#e6e600;"></span></td>
-							<td> &#60 10 </td>
+							<td><span class="dot" style="background-color:#fcf344;"></span></td>
+							<td> &#60 8 </td>
 						</tr>
 						<tr>
-							<td><span class="dot" style="background-color:#ff751a;"></span></td>
+							<td><span class="dot" style="background-color:#ffb533;"></span></td>
+							<td> 8 ~ 10 </td>
+						</tr>
+						<tr>
+							<td><span class="dot" style="background-color:#ff661a;"></span></td>
 							<td> 10 ~ 12 </td>
 						</tr>
 						<tr>
-							<td><span class="dot" style="background-color:red;"></span></td>
+							<td><span class="dot" style="background-color:#ff0b0b;"></span></td>
 							<td> 12 ~ 14 </td>
 						</tr>
 						<tr>
-							<td><span class="dot" style="background-color:maroon;"></span></td>
+							<td><span class="dot" style="background-color:#a01a00;"></span></td>
 							<td> &#62 14 </td>
 						</tr>
 					</table>
@@ -172,24 +181,20 @@
 							<td colspan="2" style="font-weight:bold;">10個月又幾天</td>
 						</tr>
 						<tr>
-							<td><span class="dot" style="background-color:#80ffaa;"></span></td>
+							<td><span class="dot" style="background-color:#81dae6;"></span></td>
 							<td width="100px"> &#60 7天 </td>
 						</tr>
 						<tr>
-							<td><span class="dot" style="background-color:#00cc00;"></span></td>
+							<td><span class="dot" style="background-color:#51a7b2;"></span></td>
 							<td> 7~15天 </td>
 						</tr>
 						<tr>
-							<td><span class="dot" style="background-color:#009933;"></span></td>
+							<td><span class="dot" style="background-color:#074c6d;"></span></td>
 							<td> &#62 15天 </td>
 						</tr>
 					</table>
 					</div>
-					<div style="margin-top:50%;">
-						<h4 style="font-weight:bold;">資料來源：</h4><br>
-						<h4 style="font-weight:bold;">教師薪資 ： 《中小學兼任代課及代理教師聘任辦法》、各縣市相關之中小學兼任代課及代理教師聘任補充規定</h4><br>
-						<h4 style="font-weight:bold;">代理教師比例  ： 中華民國教育統計</h4>	
-					</div>
+
 				</div>
 		  
 			</div>
@@ -226,7 +231,7 @@
 			}
 		</script>
 		<script type="text/javascript">
-			countyMap(105);
+			countyMap(100);
 			
 			/* 縮放、滑動 */
 			/* 
@@ -271,7 +276,7 @@
 							fill: "#9EF89E",
 							class: "area"
 						});
-						d3.select("svg").append('rect').attr('width', 60).attr('height', 30).attr('fill','none').attr('stroke','green').attr('x',220);
+						d3.select("svg").append('rect').attr('width', 60).attr('height', 30).attr('fill','none').attr('stroke','green').attr('x',220).attr('y',5);
 						/* 上色 */
 
 						d3.csv("taiwan_proportion.csv", function(data) {
@@ -292,16 +297,17 @@
 								range: 設定最低最高的對應的顏色
 							*/
 							//var color = d3.scale.linear().domain([5,10,15]).range(["Yellow","orange","#ff1a1a"]);
-							var color = ["#e6e600","#ff751a","red","Maroon"];
+							var color = ["#fcf344","#ffb533","#ff661a","#ff0b0b","#a01a00"];
 							/* 利用D3c.js畫出svg，顏色依照features裡的parameter參數 */
 							d3.select("svg").selectAll("path").data(features)
 							.attr({
 								d: path,
 								fill: function(d) {
-									if(d.properties.parameter < 10){return color[0];}
-									else if(d.properties.parameter < 12){return color[1];}
-									else if(d.properties.parameter < 14){return color[2];}
-									else{return color[3];}
+									if(d.properties.parameter < 8){return color[0];}
+									else if(d.properties.parameter < 10){return color[1];}
+									else if(d.properties.parameter < 12){return color[2];}
+									else if(d.properties.parameter < 14){return color[3];}
+									else{return color[4];}
 									//return color(d.properties.parameter);
 								},
 								class: "area"
@@ -348,16 +354,17 @@
 							}	
 						}
 						
-						var color = ["#e6e600","#ff751a","red","Maroon"];
+						var color = ["#fcf344","#ffb533","#ff661a","#ff0b0b","#a01a00"];
 						/* 利用D3c.js畫出svg，顏色依照features裡的parameter參數 */
 						d3.select("svg").selectAll("path").data(features)
 						.attr({
 							d: path,
 							fill: function(d) {
-								if(d.properties.parameter < 10){return color[0];}
-								else if(d.properties.parameter < 12){return color[1];}
-								else if(d.properties.parameter < 14){return color[2];}
-								else{return color[3];}
+								if(d.properties.parameter < 8){return color[0];}
+								else if(d.properties.parameter < 10){return color[1];}
+								else if(d.properties.parameter < 12){return color[2];}
+								else if(d.properties.parameter < 14){return color[3];}
+								else{return color[4];}
 							},
 							class: "area"
 						}).on({
@@ -420,7 +427,7 @@
 								range: 設定最低最高的對應的顏色
 							*/
 							//var color = d3.scale.linear().domain([300,331]).range(["Yellow","red"]);
-							var colormap = ['#80ffaa','#00cc00','#009933'];
+							var colormap = ['#81dae6','#51a7b2','#074c6d'];
 							/* 利用D3c.js畫出svg，顏色依照features裡的parameter參數 */
 							d3.select("svg").selectAll("path").data(features)
 							.attr({
