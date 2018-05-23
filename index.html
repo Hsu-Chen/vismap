@@ -203,7 +203,7 @@
 		<!-- Footer -->
 		<footer class="py-5 bg-dark">
 			<div class="container">
-				<p class="m-0 text-center text-white">Copyright &copy; Your Website 2018</p>
+				<p class="m-0 text-center text-white">資訊視覺化 大學報 2018</p>
 			</div>
 			<!-- /.container -->
 		</footer>
@@ -260,7 +260,7 @@
 						on: 可以設定事件觸發，可設定參數有mousedown、mouseup、click、dblclick、mouseover、mouseout、mouseenter、mouseleave
 						call(zoom): 呼叫zoom進行放大縮小滑動
 					*/
-						projection = d3.geo.mercator().center([121,23.5]).scale(6000).translate([330,320]);
+						projection = d3.geo.mercator().center([121,23.5]).scale(6000).translate([330,340]);
 						/* 將資料轉換成城SVG Path標籤的轉換函式 */
 						path = d3.geo.path().projection(projection);
 						/* 將資料中的特徵取出，map為JSON檔的資料，後方則是在JSON中，要取出特徵的部分 */
@@ -270,8 +270,8 @@
 							d: path,
 							fill: "#9EF89E",
 							class: "area"
-						}).call(zoom);
-						//d3.select("svg").append('rect').attr('width', 100).attr('height', 100).attr('fill','none').attr('stroke','black').attr('x',200);
+						});
+						d3.select("svg").append('rect').attr('width', 60).attr('height', 30).attr('fill','none').attr('stroke','green').attr('x',220);
 						/* 上色 */
 
 						d3.csv("taiwan_proportion.csv", function(data) {
@@ -389,7 +389,7 @@
 				d3.json("map/taiwan.json", function(error, map) {
 					if (error) return console.error(error);
 
-						projection = d3.geo.mercator().center([121,23.5]).scale(6000).translate([330,320]);
+						projection = d3.geo.mercator().center([121,23.5]).scale(6000).translate([330,340]);
 						/* 將資料轉換成城SVG Path標籤的轉換函式 */
 						path = d3.geo.path().projection(projection);
 						/* 將資料中的特徵取出，map為JSON檔的資料，後方則是在JSON中，要取出特徵的部分 */
@@ -399,7 +399,7 @@
 							d: path,
 							fill: "#9EF89E",
 							class: "area"
-						}).call(zoom);
+						});
 
 						/* 上色 */
 
