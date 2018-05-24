@@ -127,17 +127,18 @@
 
 			<!-- Portfolio Item Heading -->
 			<h2 id="title1" class="my-4" style="display:block;font-weight:bold;">台灣<span id="demo"></span>年各縣市代理教師比例分布圖</h2>
-			<h2 id="title2" style="display:none;font-weight:bold;">台灣105年各縣市代理教師薪資分布圖</h2>
+			<h2 id="title2" style="display:none;font-weight:bold;">台灣106年各縣市代理教師薪資分布圖</h2>
 			<!-- Portfolio Item Row -->
 			<div class="row">
 				<div class="col-md-8">
-					<button onclick="money()" class="w3-button w3-round-large" style="background-color: #074c6d;color: white;">105年代理教師薪資</button>
-					<button onclick="changemap(100)" class="w3-button w3-round-large" style="background-color: #074c6d;color:white;">105年代理教師比例</button>
+					<button onclick="money()" class="w3-button w3-round-large" style="background-color: #074c6d;color: white;">106年代理教師薪資</button>
+					<button onclick="changemap(100)" class="w3-button w3-round-large" style="background-color: #074c6d;color:white;">100~105年代理教師比例</button>
 					<svg id="taiwan" width="600px" height="600px" style="float:left;border:2px #074c6d solid;"></svg>
 					<div class="slidecontainer" style="margin-top:615px;">
 						<input type="range" min="100" max="105" value="100" class="slider" id="myRange">
 					</div>
 					<div style="margin-top:5%;">
+						<h5 style="font-weight:bold;">製表：鄭緒辰 張登凱 翁愷均</h5>
 						<h5 style="font-weight:bold;">資料來源：</h5>
 						<h5 style="font-weight:bold;">教師薪資 ： 《中小學兼任代課及代理教師聘任辦法》、各縣市相關之中小學兼任代課及代理教師聘任補充規定</h5>
 						<h5 style="font-weight:bold;">代理教師比例  ： 中華民國教育統計</h5>	
@@ -229,6 +230,7 @@
 		</script>
 		<script type="text/javascript">
 			countyMap(100);
+			money();
 			
 			/* 縮放、滑動 */
 			/* 
