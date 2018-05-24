@@ -228,10 +228,13 @@
 				changemap(this.value);
 			}
 		</script>
+
 		<script type="text/javascript">
+			var number=getParameterByName('number');
 			countyMap(100);
-			money();
-			
+			if(number == 0){
+				money();
+			}
 			/* 縮放、滑動 */
 			/* 
 				利用D3.js設計的Zoom Behavior，實現滑鼠滾輪滾動可地圖放大縮小效果，先宣告zoom行為，接著用call來呼叫zoom的行為。
@@ -461,37 +464,14 @@
 					
 			}
 			
-			function setMarker(data)
-			{
-				/* 
-					採用image方式，也可以選擇circle方式
-					pinWidth: 我自己設定的圖片寬度，方便調整
-					href: 設定圖片位置
-					projection: 利用projection來將經緯度轉換成svg上位置
-					on: 設定點擊後的事件
-				*/
-				var pinWidth = 30;
-				var g = d3.select("svg").append("g");
-				d3.select("svg").selectAll("g").data(data).enter().append("image")
-				.attr({
-					href: function(d) {
-						return 'img/'+d.img
-					},
-					x: function(d) {
-						return projection([d.lng, d.lat])[0]-(pinWidth/2);
-					},
-					y: function(d) {
-						return projection([d.lng, d.lat])[1]-pinWidth
-					},
-					height: pinWidth,
-					width: pinWidth,
-					class: function(d) {
-						return d.title
-					}
-				})
-				.on({
-					"click": function(d){alert(d.title);}
-				});
+			function getParameterByName(name, url) {
+				if (!url) url = window.location.href;
+				name = name.replace(/[\[\]]/g, "\\$&");
+				var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+					results = regex.exec(url);
+				if (!results) return null;
+				if (!results[2]) return '';
+				return decodeURIComponent(results[2].replace(/\+/g, " "));
 			}
 			
 		</script>
