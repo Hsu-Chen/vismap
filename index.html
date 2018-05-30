@@ -150,7 +150,7 @@
 					<!--教師比例表格-->
 					<table id="proportion" style="float:left;border:0px #009933 solid;display:block;" >
 						<tr>
-							<td colspan="2" style="font-weight:bold;">百分比(%)</td>
+							<td colspan="2" style="font-weight:bold;font-size:17px;">百分比(%)</td>
 						</tr>
 						<tr>
 							<td><span class="dot" style="background-color:#a01a00;"></span></td>
@@ -176,7 +176,10 @@
 					<!--教室薪資表格-->
 					<table id="salary" style="float:left;border:0px #009933 solid;display:none;" >
 						<tr>
-							<td colspan="2" style="font-weight:bold;">聘期：<br>10個月又幾天</td>
+							<td colspan="2" style="font-weight:bold;font-size:17px;">聘期：</td>
+						</tr>
+						<tr>
+							<td colspan="2" style="font-weight:bold;">(10個月又幾天)</td>
 						</tr>
 						<tr>
 							<td><span class="dot" style="background-color:#074c6d;"></span></td>
@@ -279,13 +282,19 @@
 						path = d3.geo.path().projection(projection);
 						/* 將資料中的特徵取出，map為JSON檔的資料，後方則是在JSON中，要取出特徵的部分 */
 						features = topojson.feature(map, map.objects.County_WGS84).features;
+						features[0].geometry.coordinates[0][0][0][1]=features[0].geometry.coordinates[0][0][0][1]+0.05;
+						features[0].geometry.coordinates[0][0][1][0]=features[0].geometry.coordinates[0][0][1][0]+0.05;
+						features[0].geometry.coordinates[0][0][3][1]=features[0].geometry.coordinates[0][0][3][1]+0.05;
+						features[0].geometry.coordinates[1][0][0][1]=features[0].geometry.coordinates[1][0][0][1]+0.05;
+						features[0].geometry.coordinates[1][0][1][0]=features[0].geometry.coordinates[1][0][1][0]+0.05;
+						features[0].geometry.coordinates[1][0][3][1]=features[0].geometry.coordinates[1][0][3][1]+0.05;
 						/* 利用D3c.js畫出svg */
 						d3.select("svg").selectAll("path").data(features).enter().append("path").attr({
 							d: path,
 							fill: "#9EF89E",
 							class: "area"
 						});
-						d3.select("svg").append('rect').attr('width', 60).attr('height', 30).attr('fill','none').attr('stroke','#074c6d').attr('x',220).attr('y',5);
+						//d3.select("svg").append('rect').attr('width', 60).attr('height', 30).attr('fill','none').attr('stroke','#074c6d').attr('x',220).attr('y',5);
 						/* 上色 */
                   		
 
@@ -368,7 +377,6 @@
 				xaxis.style.display = "block";
 
 				d3.csv("taiwan_proportion.csv", function(data) {
-						
 						/* 將各縣市的數值(parameter)寫入features裡面，寫法範例，可自行更改 */
 						for(item=features.length - 1; item >= 0; item-- ) { 
 							var site = features[item].properties.County_ID;
@@ -426,11 +434,18 @@
 				d3.json("map/taiwan.json", function(error, map) {
 					if (error) return console.error(error);
 
+						
 						projection = d3.geo.mercator().center([121,23.5]).scale(6000).translate([330,340]);
 						/* 將資料轉換成城SVG Path標籤的轉換函式 */
 						path = d3.geo.path().projection(projection);
 						/* 將資料中的特徵取出，map為JSON檔的資料，後方則是在JSON中，要取出特徵的部分 */
 						features = topojson.feature(map, map.objects.County_WGS84).features;
+						features[0].geometry.coordinates[0][0][0][1]=features[0].geometry.coordinates[0][0][0][1]+0.05;
+						features[0].geometry.coordinates[0][0][1][0]=features[0].geometry.coordinates[0][0][1][0]+0.05;
+						features[0].geometry.coordinates[0][0][3][1]=features[0].geometry.coordinates[0][0][3][1]+0.05;
+						features[0].geometry.coordinates[1][0][0][1]=features[0].geometry.coordinates[1][0][0][1]+0.05;
+						features[0].geometry.coordinates[1][0][1][0]=features[0].geometry.coordinates[1][0][1][0]+0.05;
+						features[0].geometry.coordinates[1][0][3][1]=features[0].geometry.coordinates[1][0][3][1]+0.05;
 						/* 利用D3c.js畫出svg */
 						d3.select("svg").selectAll("path").data(features).enter().append("path").attr({
 							d: path,
