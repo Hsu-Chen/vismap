@@ -136,6 +136,7 @@
 					<svg id="taiwan" width="600px" height="600px" style="float:left;border:2px #074c6d solid;"></svg>
 					<div class="slidecontainer" style="margin-top:615px;">
 						<input type="range" min="100" max="105" value="100" class="slider" id="myRange">
+						<svg id="x-axis" width="600px" height="30px" style="margin-top: 0px;"></svg>
 					</div>
 					<div style="margin-top:5%;">
 						<h5 style="font-weight:bold;">製表／鄭緒辰、張登凱、翁愷均</h5>						
@@ -221,6 +222,7 @@
 			var title2 = document.getElementById("title2");
 			var button1 = document.getElementById("button1");
 			var button2 = document.getElementById("button2");
+			var xaxis = document.getElementById("x-axis");
 
 			output.innerHTML = slider.value;
 
@@ -285,6 +287,7 @@
 						});
 						d3.select("svg").append('rect').attr('width', 60).attr('height', 30).attr('fill','none').attr('stroke','#074c6d').attr('x',220).attr('y',5);
 						/* 上色 */
+                  		
 
 						d3.csv("taiwan_proportion.csv", function(data) {
 						
@@ -337,6 +340,20 @@
 							})
 						});
 					});
+					// Create scale
+					var scale1 = d3.scale.linear()
+                  		.domain([99.5, 105.5])
+                  		.range([0, 600]);
+
+    					// Add scales to axis
+    					var x_axis = d3.svg.axis().orient("bottom")
+                   		.scale(scale1)
+						.tickValues([100,101,102,103,104,105])
+						.tickFormat(function(d){return Math.floor(d);});
+						
+						var svg2 = d3.select("#x-axis");
+						svg2.append("g")
+       					.call(x_axis);
 					
 			}
 
@@ -348,6 +365,7 @@
 				title2.style.display = "none";
 				button1.style.backgroundColor = "#51a7b2";
 				button2.style.backgroundColor = "#074c6d";
+				xaxis.style.display = "block";
 
 				d3.csv("taiwan_proportion.csv", function(data) {
 						
@@ -402,6 +420,7 @@
 				title2.style.display = "block";
 				button2.style.backgroundColor = "#51a7b2";
 				button1.style.backgroundColor = "#074c6d";
+				xaxis.style.display = "none";
 
 				/* 放置你的TopoJSON路徑 */
 				d3.json("map/taiwan.json", function(error, map) {
