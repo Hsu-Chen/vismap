@@ -41,7 +41,7 @@
 				-webkit-appearance: none;
 				width:100%;
 				height: 25px;
-				background: #4CAF50;
+				background: #51a7b2;
 				outline: none;
 				opacity: 0.7;
 				-webkit-transition: .2s;
@@ -58,14 +58,14 @@
 				border-radius: 5px;
 				width: 100px;
 				height: 35px;
-				background: rgb(6, 63, 8);
+				background: #074c6d;
 				cursor: pointer;
 			}
 
 			.slider::-moz-range-thumb {
 				width: 25px;
 				height: 25px;
-				background: rgb(6, 63, 8);
+				background: #074c6d;
 				cursor: pointer;
 			}
 			.table {
@@ -131,8 +131,8 @@
 			<!-- Portfolio Item Row -->
 			<div class="row">
 				<div class="col-md-8">
-					<button onclick="money()" class="w3-button w3-round-large" style="background-color: #074c6d;color: white;">106年代理教師薪資</button>
-					<button onclick="changemap(100)" class="w3-button w3-round-large" style="background-color: #074c6d;color:white;">100~105年代理教師比例</button>
+					<button id="button1" onclick="money()" class="w3-button w3-round-large" style="background-color: #074c6d;color: white;">106年代理教師薪資</button>
+					<button id="button2" onclick="changemap(100)" class="w3-button w3-round-large" style="background-color: #074c6d;color:white;">100~105年代理教師比例</button>
 					<svg id="taiwan" width="600px" height="600px" style="float:left;border:2px #074c6d solid;"></svg>
 					<div class="slidecontainer" style="margin-top:615px;">
 						<input type="range" min="100" max="105" value="100" class="slider" id="myRange">
@@ -152,42 +152,42 @@
 							<td colspan="2" style="font-weight:bold;">百分比(%)</td>
 						</tr>
 						<tr>
-							<td><span class="dot" style="background-color:#fcf344;"></span></td>
-							<td> &#60 8 </td>
-						</tr>
-						<tr>
-							<td><span class="dot" style="background-color:#ffb533;"></span></td>
-							<td> 8 ~ 10 </td>
-						</tr>
-						<tr>
-							<td><span class="dot" style="background-color:#ff661a;"></span></td>
-							<td> 10 ~ 12 </td>
+							<td><span class="dot" style="background-color:#a01a00;"></span></td>
+							<td> &#62 14 </td>
 						</tr>
 						<tr>
 							<td><span class="dot" style="background-color:#ff0b0b;"></span></td>
 							<td> 12 ~ 14 </td>
 						</tr>
 						<tr>
-							<td><span class="dot" style="background-color:#a01a00;"></span></td>
-							<td> &#62 14 </td>
+							<td><span class="dot" style="background-color:#ff661a;"></span></td>
+							<td> 10 ~ 12 </td>
+						</tr>
+						<tr>
+							<td><span class="dot" style="background-color:#ffb533;"></span></td>
+							<td> 8 ~ 10 </td>
+						</tr>
+						<tr>
+							<td><span class="dot" style="background-color:#fcf344;"></span></td>
+							<td> &#60 8 </td>
 						</tr>
 					</table>
 					<!--教室薪資表格-->
 					<table id="salary" style="float:left;border:0px #009933 solid;display:none;" >
 						<tr>
-							<td colspan="2" style="font-weight:bold;">10個月又幾天</td>
+							<td colspan="2" style="font-weight:bold;">聘期：<br>10個月又幾天</td>
 						</tr>
 						<tr>
-							<td><span class="dot" style="background-color:#81dae6;"></span></td>
-							<td width="100px"> &#60 7天 </td>
+							<td><span class="dot" style="background-color:#074c6d;"></span></td>
+							<td> &#62 15天 </td>
 						</tr>
 						<tr>
 							<td><span class="dot" style="background-color:#51a7b2;"></span></td>
 							<td> 7~15天 </td>
 						</tr>
 						<tr>
-							<td><span class="dot" style="background-color:#074c6d;"></span></td>
-							<td> &#62 15天 </td>
+							<td><span class="dot" style="background-color:#81dae6;"></span></td>
+							<td width="100px"> &#60 7天 </td>
 						</tr>
 					</table>
 					</div>
@@ -219,6 +219,8 @@
 			var salary_table = document.getElementById("salary");
 			var title1 = document.getElementById("title1");
 			var title2 = document.getElementById("title2");
+			var button1 = document.getElementById("button1");
+			var button2 = document.getElementById("button2");
 
 			output.innerHTML = slider.value;
 
@@ -226,6 +228,7 @@
 				output.innerHTML = this.value;
 				changemap(this.value);
 			}
+			
 		</script>
 
 		<script type="text/javascript">
@@ -256,6 +259,9 @@
 			function countyMap(year)
 			{
 				slider.style.display = "block";
+				button1.style.backgroundColor = "#51a7b2";
+				button2.style.backgroundColor = "#074c6d";
+
 				/* 放置你的TopoJSON路徑 */
 				d3.json("map/taiwan.json", function(error, map) {
 					if (error) return console.error(error);
@@ -340,6 +346,8 @@
 				salary_table.style.display = "none";
 				title1.style.display = "block";
 				title2.style.display = "none";
+				button1.style.backgroundColor = "#51a7b2";
+				button2.style.backgroundColor = "#074c6d";
 
 				d3.csv("taiwan_proportion.csv", function(data) {
 						
@@ -392,6 +400,8 @@
 				salary_table.style.display = "block";
 				title1.style.display = "none";
 				title2.style.display = "block";
+				button2.style.backgroundColor = "#51a7b2";
+				button1.style.backgroundColor = "#074c6d";
 
 				/* 放置你的TopoJSON路徑 */
 				d3.json("map/taiwan.json", function(error, map) {
